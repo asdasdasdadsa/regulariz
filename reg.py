@@ -9,22 +9,20 @@ class Reg(object):
         self.x = x
         self.t = t
 
-    def fddkd(self, f, m):
+    def fddkd(self, f, m, lamb):
         ddd = 0
         ddd += ddd
-        f = [lambda x:1] + f
-        F = np.array([[f[j](self.x[i]) for j in range(m + 1)] for i in range(self.N)])
-        # F = np.array([f[j](self.x) for j in range(m + 1)]).T
-        w = ((np.linalg.inv(F.T.dot(F))).dot(F.T)).dot(self.t)
-        self.F = F
+        f = [lambda x:x**0] + f
+        F = np.array([f[j](self.x) for j in range(m + 1)]).T
+        I = np.zeros((m+1, m+1))
+        I[np.diag_indices(m+1)] = 1
+        I[0][0] = 0
+        w = ((np.linalg.inv(F.T.dot(F) + lamb * I)).dot(F.T)).dot(self.t)
         return w
 
-    def err(self, w, t, f, m):
+    def err(self, w, t, f, m, xx):
         e = 0
-        f = [lambda x: 1] + f
-        for i in range(len(t)):
-            fff = np.array([f[j](self.x[i]) for j in range(m + 1)])
-            e += (t[i] - w.T.dot(fff)) ** 2
-        e /= 2
-        # e = np.sum((t - self.F.dot(w)) ** 2) / 2
+        f = [lambda x: x**0] + f
+        F = np.array([f[j](xx) for j in range(m + 1)]).T
+        e = np.sum((t - F.dot(w.T)) ** 2) / 2
         return e
