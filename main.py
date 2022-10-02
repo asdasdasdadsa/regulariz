@@ -63,7 +63,7 @@ sSs = reg.Reg(x_train, t_train, len(x_train))
 ind = []
 top = []
 while len(ind) < 31:
-    d = aAa.kk(1, len(bas_fun), len(bas_fun))
+    d = aAa.kk(8, 17, len(bas_fun))
     if ind.count(d) == 0:
         ind.append(d)
 for i in ind:
